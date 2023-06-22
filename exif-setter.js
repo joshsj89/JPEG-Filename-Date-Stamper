@@ -22,8 +22,8 @@ const getExifFromJpegFile = (filename) => {
     return piexif.load(getBinaryDataFromJpegFile(filename));
 }
 
-const getJpegFileFromBinaryData = (base64String, filename) => {
-    const imageBuffer = Buffer.from(base64String, 'binary');
+const getJpegFileFromBinaryData = (binaryString, filename) => {
+    const imageBuffer = Buffer.from(binaryString, 'binary');
     fs.writeFileSync(filename, imageBuffer);
 }
 
