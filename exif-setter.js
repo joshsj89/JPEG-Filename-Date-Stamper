@@ -96,4 +96,6 @@ console.log('Complete');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Next Steps:
-//      -Expand to include other naming formats
+//      -Implement a way to select a folder to process
+//      -Implement a GUI for a more user-friendly interaction with the program
+//      -Implement a way to select a date format
