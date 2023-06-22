@@ -14,20 +14,6 @@ const piexif = require('piexifjs');
 
 const folderPath = 'JPEG-Filename-Date-Stamper/images/';
 
-fs.readdir(folderPath, (err, files) => {
-    if (err) {
-        console.error('Error reading folder:', err);
-        return;
-    }
-
-    const jpgFiles = files.filter(file => path.extname(file).toLowerCase() === '.jpg');
-
-    jpgFiles.forEach(file => {
-        const filePath = path.join(folderPath, file);
-        updateImageExifData(filePath);
-    });
-});
-
 const getBinaryDataFromJpegFile = (filename) => {
     return fs.readFileSync(filename).toString('binary');
 }
@@ -43,7 +29,7 @@ const getJpegFileFromBinaryData = (base64String, filename) => {
 
 const getNewTimestamp = (filepath) => {
     const filename = filepath.substring(filepath.lastIndexOf("\\") + 1);
-
+    
     const year = filename.substring(0, 4);
     const month = filename.substring(4, 6);
     const day = filename.substring(6, 8);
@@ -68,6 +54,20 @@ const updateImageExifData = (imagePath) => {
     
     getJpegFileFromBinaryData(temp, imagePath);
 }
+
+fs.readdir(folderPath, (err, files) => {
+    if (err) {
+        console.error('Error reading folder:', err);
+        return;
+    }
+
+    const jpgFiles = files.filter(file => path.extname(file).toLowerCase() === '.jpg');
+
+    jpgFiles.forEach(file => {
+        const filePath = path.join(folderPath, file);
+        updateImageExifData(filePath);
+    });
+});
 
 console.log('Complete');
 
