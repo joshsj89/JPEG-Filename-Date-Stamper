@@ -1,5 +1,23 @@
 {
+  "name": "jpeg-filename-date-stamper",
+  "version": "1.0.2",
+  "description": "Modifies the EXIF data of JPEG files by extracting the date/time from the filename and updating the EXIF tags.",
+  "main": "exif-setter.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshsj89/JPEG-Filename-Date-Stamper.git"
+  },
+  "author": "Josh Kindarara",
+  "license": "ISC",
   "dependencies": {
     "piexifjs": "^1.0.6"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/joshsj89/JPEG-Filename-Date-Stamper/issues"
+  },
+  "homepage": "https://github.com/joshsj89/JPEG-Filename-Date-Stamper#readme"
 }
