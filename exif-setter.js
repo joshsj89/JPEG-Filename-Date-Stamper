@@ -73,9 +73,9 @@ const updateImageExifData = (imagePath) => {
     
     const exifDump = piexif.dump(exifData)
     
-    const temp = piexif.insert(exifDump, getBinaryDataFromJpegFile(imagePath));
+    const binaryData = piexif.insert(exifDump, getBinaryDataFromJpegFile(imagePath));
     
-    getJpegFileFromBinaryData(temp, imagePath);
+    getJpegFileFromBinaryData(binaryData, imagePath);
 }
 
 fs.readdir(folderPath, (err, files) => {
@@ -96,6 +96,7 @@ console.log('Complete');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Next Steps:
+//      -Make it more efficient by making program run in parallel (async) and implement batch control
 //      -Implement a way to select a folder to process
 //      -Implement a GUI for a more user-friendly interaction with the program
 //      -Implement a way to select a date format
