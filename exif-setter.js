@@ -14,6 +14,8 @@ const piexif = require('piexifjs');
 
 const folderPath = 'JPEG-Filename-Date-Stamper/images/';
 
+// Utility Functions
+
 const getBinaryDataFromJpegFile = (filename) => {
     return fs.readFileSync(filename).toString('binary');
 }
@@ -25,6 +27,16 @@ const getExifFromJpegFile = (filename) => {
 const getJpegFileFromBinaryData = (binaryString, filename) => {
     const imageBuffer = Buffer.from(binaryString, 'binary');
     fs.writeFileSync(filename, imageBuffer);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
 }
 
 const getNewTimestamp = (filepath) => {
@@ -64,39 +76,57 @@ const getNewTimestamp = (filepath) => {
 }
 
 const updateImageExifData = (imagePath) => {
-    const exifData = getExifFromJpegFile(imagePath);
-    
-    const newTimestamp = getNewTimestamp(imagePath);
-    
-    exifData.Exif['36867'] = newTimestamp;
-    exifData.Exif['36868'] = newTimestamp;
-    
-    const exifDump = piexif.dump(exifData)
-    
-    const binaryData = piexif.insert(exifDump, getBinaryDataFromJpegFile(imagePath));
-    
-    getJpegFileFromBinaryData(binaryData, imagePath);
+    return new Promise((resolve, reject) => {
+        const exifData = getExifFromJpegFile(imagePath);
+        
+        const newTimestamp = getNewTimestamp(imagePath);
+        
+        if (newTimestamp === null) {
+            resolve();
+            return;
+        }
+        
+        exifData.Exif['36867'] = newTimestamp;
+        exifData.Exif['36868'] = newTimestamp;
+        
+        const exifDump = piexif.dump(exifData)
+        
+        const binaryData = piexif.insert(exifDump, getBinaryDataFromJpegFile(imagePath));
+        
+        getJpegFileFromBinaryData(binaryData, imagePath);
+
+        resolve();
+    });
+
 }
 
-fs.readdir(folderPath, (err, files) => {
-    if (err) {
+const main = async () => {
+    try {
+        const concurrency = 100;
+        
+        const files = fs.readdirSync(folderPath);
+        const jpgFiles = files.filter(file => path.extname(file).toLowerCase() === '.jpg');
+
+        const chunks = chunkArray(jpgFiles, concurrency); // Splits files into chunks
+        for (chunk of chunks) {
+            const promises = chunk.map(file => {
+                const filePath = path.join(folderPath, file);
+                return updateImageExifData(filePath);
+            });
+            await Promise.all(promises);
+        }
+    } catch(err) {
         console.error('Error reading folder:', err);
         return;
     }
 
-    const jpgFiles = files.filter(file => path.extname(file).toLowerCase() === '.jpg');
+    console.log('Complete');
+}
 
-    jpgFiles.forEach(file => {
-        const filePath = path.join(folderPath, file);
-        updateImageExifData(filePath);
-    });
-});
-
-console.log('Complete');
+main();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Next Steps:
-//      -Make it more efficient by making program run in parallel (async) and implement batch control
 //      -Implement a way to select a folder to process
 //      -Implement a GUI for a more user-friendly interaction with the program
 //      -Implement a way to select a date format
