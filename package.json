@@ -3,7 +3,9 @@
   "version": "1.0.2",
   "description": "Modifies the EXIF data of JPEG files by extracting the date/time from the filename and updating the EXIF tags.",
   "main": "exif-setter.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
