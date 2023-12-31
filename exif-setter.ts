@@ -1,16 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const piexif = require('piexifjs');
+import EXIF = require("./Interfaces/EXIF");
+import FS = require("./Interfaces/FS");
+import Path = require("./Interfaces/Path");
+import Piexif = require("./Interfaces/Piexif");
 
-/** Exif Tag Object */
-interface EXIF {
-    "0th"?: object;
-    "Exif"?: object;
-    "GPS"?: object;
-    "Interop"?: object;
-    "1st"?: object;
-    "thumbnail"?: any;
-}
+const fs: FS = require('fs');
+const path: Path = require('path');
+const piexif: Piexif = require('piexifjs');
 
 /*
 36867: DateTimeOriginal
